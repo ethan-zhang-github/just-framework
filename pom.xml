@@ -6,6 +6,7 @@
     <modules>
         <module>just-framework-core</module>
         <module>just-framework-webmvc</module>
+        <module>just-framework-zookeeper</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -48,13 +49,13 @@
         </dependency>
     </dependencies>
 
-    <build>
+    <!--<build>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
         </plugins>
-    </build>
+    </build>-->
 
 </project>
