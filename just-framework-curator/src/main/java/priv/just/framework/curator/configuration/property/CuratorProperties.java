@@ -12,15 +12,29 @@ import priv.just.framework.core.constant.GlobalConstant;
  */
 @Getter
 @Setter
-@ConfigurationProperties(prefix = GlobalConstant.PREFIX + "." + CuratorProperties.PREFIX)
+@ConfigurationProperties(prefix = CuratorProperties.PREFIX)
 public class CuratorProperties {
 
-    public static final String PREFIX = "curator";
+    public static final String PREFIX = GlobalConstant.PREFIX + "." + "curator";
 
     private boolean enable = true;
 
     private String host = "localhost";
 
     private int port = 2181;
+
+    private LeaderSelectorProperties leaderSelector;
+
+    @Getter
+    @Setter
+    public static class LeaderSelectorProperties {
+
+        public static final String PREFIX = CuratorProperties.PREFIX + "." + "leaderSelector";
+
+        private boolean enable = false;
+
+        private String path = "/leader";
+
+    }
 
 }
