@@ -1,4 +1,4 @@
-package priv.just.framework.zookeeper.annotation;
+package priv.just.framework.curator.annotation;
 
 import org.springframework.core.annotation.AliasFor;
 

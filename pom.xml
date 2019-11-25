@@ -6,7 +6,7 @@
     <modules>
         <module>just-framework-core</module>
         <module>just-framework-webmvc</module>
-        <module>just-framework-zookeeper</module>
+        <module>just-framework-curator</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>

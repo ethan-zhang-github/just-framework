@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>just-framework-zookeeper</artifactId>
+    <artifactId>just-framework-curator</artifactId>
 
     <dependencies>
         <dependency>

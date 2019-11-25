@@ -1,4 +1,4 @@
-package priv.just.framework.zookeeper.configuration.property;
+package priv.just.framework.curator.configuration.property;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,10 +12,12 @@ import priv.just.framework.core.constant.GlobalConstant;
  */
 @Getter
 @Setter
-@ConfigurationProperties(prefix = GlobalConstant.PREFIX + "." + ZookeeperProperties.PREFIX)
-public class ZookeeperProperties {
+@ConfigurationProperties(prefix = GlobalConstant.PREFIX + "." + CuratorProperties.PREFIX)
+public class CuratorProperties {
 
-    public static final String PREFIX = "zk";
+    public static final String PREFIX = "curator";
+
+    private boolean enable = true;
 
     private String host = "localhost";
 

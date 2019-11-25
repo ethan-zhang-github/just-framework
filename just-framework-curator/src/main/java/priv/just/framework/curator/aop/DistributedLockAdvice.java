@@ -1,4 +1,4 @@
-package priv.just.framework.zookeeper.aop;
+package priv.just.framework.curator.aop;
 
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInterceptor;
@@ -6,7 +6,7 @@ import org.aopalliance.intercept.MethodInvocation;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.locks.InterProcessMutex;
-import priv.just.framework.zookeeper.annotation.DistributedLock;
+import priv.just.framework.curator.annotation.DistributedLock;
 
 import java.lang.reflect.Method;
 import java.util.Objects;

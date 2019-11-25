@@ -1,3 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-priv.just.framework.zookeeper.configuration.CuratorAutoConfiguration,\
-priv.just.framework.zookeeper.configuration.DistributedLockAdvisorAutoConfiguration
