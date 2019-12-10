@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+priv.just.framework.webmvc.configuration.ThreadPoolAutoConfiguration
