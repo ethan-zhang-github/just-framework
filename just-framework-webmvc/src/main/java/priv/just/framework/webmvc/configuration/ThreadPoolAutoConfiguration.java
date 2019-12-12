@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.endpoint.condition.ConditionalOnAvailableEndpoint;
-import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -72,15 +71,11 @@ public class ThreadPoolAutoConfiguration implements AsyncConfigurer {
         };
     }
 
-    @ConditionalOnClass(Health.class)
-    public static class ThreadPoolMonitorAutoConfiguration {
-
-        @ConditionalOnAvailableEndpoint
-        @Bean
-        public ThreadPoolEndpoint threadPoolEndpoint() {
-            return new ThreadPoolEndpoint();
-        }
-
+    @ConditionalOnClass(name = "org.springframework.boot.actuate.health.Health")
+    @ConditionalOnAvailableEndpoint
+    @Bean
+    public ThreadPoolEndpoint threadPoolEndpoint() {
+        return new ThreadPoolEndpoint();
     }
 
 }
