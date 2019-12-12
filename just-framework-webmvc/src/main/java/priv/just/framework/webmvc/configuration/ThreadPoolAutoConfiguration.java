@@ -40,7 +40,7 @@ public class ThreadPoolAutoConfiguration implements AsyncConfigurer {
 
     @Override
     public Executor getAsyncExecutor() {
-        return threadPoolTaskExecutor();
+        return executor();
     }
 
     @Override
@@ -49,7 +49,7 @@ public class ThreadPoolAutoConfiguration implements AsyncConfigurer {
     }
 
     @Bean
-    public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
+    public Executor executor() {
         executor.setThreadNamePrefix(properties.getThreadNamePrefix());
         executor.setCorePoolSize(properties.getCorePoolSize());
         executor.setQueueCapacity(properties.getQueueCapacity());
@@ -73,10 +73,14 @@ public class ThreadPoolAutoConfiguration implements AsyncConfigurer {
     }
 
     @ConditionalOnClass(Health.class)
-    @ConditionalOnAvailableEndpoint
-    @Bean
-    public ThreadPoolEndpoint threadPoolEndpoint() {
-        return new ThreadPoolEndpoint();
+    public static class ThreadPoolMonitorAutoConfiguration {
+
+        @ConditionalOnAvailableEndpoint
+        @Bean
+        public ThreadPoolEndpoint threadPoolEndpoint() {
+            return new ThreadPoolEndpoint();
+        }
+
     }
 
 }
