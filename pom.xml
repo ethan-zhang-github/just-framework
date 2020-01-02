@@ -9,6 +9,7 @@
         <module>just-framework-curator</module>
         <module>just-framework-redis</module>
         <module>just-framework-demo</module>
+        <module>just-framework-security</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
