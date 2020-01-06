@@ -10,6 +10,7 @@
         <module>just-framework-redis</module>
         <module>just-framework-demo</module>
         <module>just-framework-security</module>
+        <module>just-framework-retry</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
