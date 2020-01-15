@@ -5,9 +5,9 @@ package priv.just.framework.retry.exception;
  * @author: yixiezi1994@gmail.com
  * @date: 2020-01-06 9:00
  */
-public class RetryException extends RuntimeException {
+public class BusException extends RuntimeException {
 
-    public RetryException(String msg) {
+    public BusException(String msg) {
         super(msg);
     }
 
