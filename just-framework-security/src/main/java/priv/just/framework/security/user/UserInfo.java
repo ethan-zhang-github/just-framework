@@ -1,6 +1,5 @@
 package priv.just.framework.security.user;
 
-import com.google.common.collect.Lists;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -40,7 +39,7 @@ public class UserInfo implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Lists.newArrayList();
+        return authorities;
     }
 
     @Override
