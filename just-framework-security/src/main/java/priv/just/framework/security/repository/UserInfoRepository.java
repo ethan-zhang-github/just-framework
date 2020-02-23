@@ -3,8 +3,7 @@ package priv.just.framework.security.repository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
-import priv.just.framework.security.enums.Authority;
-import priv.just.framework.security.user.UserInfo;
+import priv.just.framework.security.domain.UserInfo;
 
 import javax.annotation.PostConstruct;
 import java.util.Map;
@@ -24,8 +23,7 @@ public class UserInfoRepository {
 
     @PostConstruct
     public void init() {
-        userInfoMap.put("user", new UserInfo("user", passwordEncoder.encode("123456"), Authority.USER.getCode()));
-        userInfoMap.put("admin", new UserInfo("admin", passwordEncoder.encode("123456"), Authority.ADMIN.getCode()));
+        userInfoMap.put("just1984", new UserInfo("just1984", passwordEncoder.encode("123456"), "ACCOUNT,SUB_ACCOUNT"));
     }
 
     public UserInfo getByUsername(String username) {

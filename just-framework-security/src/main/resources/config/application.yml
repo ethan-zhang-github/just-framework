@@ -1,6 +1,6 @@
 #spring:
 #  security:
-#    user:
+#    domain:
 #      name: admin
 #      password: 123456
 #      roles: USER

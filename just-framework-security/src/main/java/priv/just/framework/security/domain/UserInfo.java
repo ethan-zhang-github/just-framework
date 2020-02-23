@@ -1,4 +1,4 @@
-package priv.just.framework.security.user;
+package priv.just.framework.security.domain;
 
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
