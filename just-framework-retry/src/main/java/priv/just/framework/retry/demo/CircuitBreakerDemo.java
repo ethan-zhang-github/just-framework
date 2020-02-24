@@ -22,19 +22,19 @@ public class CircuitBreakerDemo {
 
     private static Random random = new Random();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         RetryTemplate retryTemplate = new RetryTemplate();
         retryTemplate.setRetryPolicy(new CircuitBreakerRetryPolicy(new SimpleRetryPolicy(10)));
         retryTemplate.setBackOffPolicy(new FixedBackOffPolicy());
         retryTemplate.execute(context -> {
             int retryCount = context.getRetryCount() + 1;
             log.info("开始第{}次重试...", retryCount);
-            if (random.nextInt(10) < 5) {
+            if (random.nextInt(10) < 1) {
                 log.error("第{}次重试成功", retryCount);
                 return "success";
             }
             log.error("第{}次重试失败", retryCount);
-            throw new BusException("fail");
+            throw new Exception("fail");
         }, context -> {
             log.info("重试{}次均失败，默认返回", context.getRetryCount());
             return "success";
