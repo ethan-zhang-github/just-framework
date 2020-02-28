@@ -29,12 +29,12 @@ public class DemoWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .addFilterBefore(new CookieAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-                /*.formLogin()
+                .formLogin()
                 .loginPage("/app/needLogin")
                 .loginProcessingUrl("/app/login")
                 .successHandler(new MyAuthenticationSuccessHandler())
                 .failureHandler(new MyAuthenticationFailureHandler())
-                .and()*/
+                .and()
                 .authorizeRequests()
                 .antMatchers("/app/**").permitAll()
                 .anyRequest().authenticated()

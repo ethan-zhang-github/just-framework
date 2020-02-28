@@ -21,7 +21,7 @@ public class CookieAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         log.info("进入cookie授权校验");
-        Arrays.stream(request.getCookies()).forEach(cookie -> log.info(cookie.getName() + "：" + cookie.getValue()));
+        // Arrays.stream(request.getCookies()).forEach(cookie -> log.info(cookie.getName() + "：" + cookie.getValue()));
         filterChain.doFilter(request, response);
     }
 

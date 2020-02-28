@@ -1,16 +1,14 @@
 package priv.just.framework.demo.controller;
 
-import com.alibaba.fastjson.JSONObject;
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.annotation.Resource;
 
 /**
  * @description:
@@ -22,20 +20,18 @@ import javax.validation.constraints.NotNull;
 @RequestMapping("demo")
 public class DemoController {
 
-    @PostMapping("post")
-    public void post(@RequestBody @Validated PostData postData) {
-        log.info(JSONObject.toJSONString(postData));
-    }
+    @Resource
+    private BeanFactory beanFactory;
+    
+    @Resource
+    private ApplicationContext applicationContext;
 
-    @Data
-    public static class PostData {
-
-        @NotNull
-        private Integer id;
-
-        @NotEmpty
-        private String name;
-
+    @PostMapping("test")
+    public void test() {
+        AutowireCapableBeanFactory autowireCapableBeanFactory = applicationContext.getAutowireCapableBeanFactory();
+        System.out.println(beanFactory == autowireCapableBeanFactory);
+        BeanFactory internalBeanFactory = beanFactory.getBean(BeanFactory.class);
+        System.out.println(internalBeanFactory);
     }
 
 }
