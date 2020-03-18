@@ -13,6 +13,7 @@
         <module>just-framework-retry</module>
         <module>just-framework-webflux</module>
         <module>just-framework-batch</module>
+        <module>just-framework-netty</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
