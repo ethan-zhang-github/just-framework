@@ -14,6 +14,7 @@
         <module>just-framework-webflux</module>
         <module>just-framework-batch</module>
         <module>just-framework-netty</module>
+        <module>just-framework-spring-cloud</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -79,6 +80,10 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <fork>true</fork>
+                    <addResources>true</addResources>
+                </configuration>
             </plugin>
         </plugins>
     </build>-->
