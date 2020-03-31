@@ -13,10 +13,11 @@
     <packaging>pom</packaging>
     <modules>
         <module>just-framework-spring-cloud-gateway</module>
+        <module>just-framework-spring-cloud-circuit-breaker</module>
     </modules>
 
     <properties>
-        <spring-cloud.version>Greenwich.SR2</spring-cloud.version>
+        <spring-cloud.version>Hoxton.SR3</spring-cloud.version>
     </properties>
 
     <dependencyManagement>
