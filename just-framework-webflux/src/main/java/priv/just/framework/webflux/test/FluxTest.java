@@ -1,18 +1,22 @@
 package priv.just.framework.webflux.test;
 
-import org.reactivestreams.Subscription;
-import reactor.core.publisher.BaseSubscriber;
-import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Scheduler;
-import reactor.core.scheduler.Schedulers;
+        import org.reactivestreams.Subscription;
+        import reactor.core.publisher.BaseSubscriber;
+        import reactor.core.publisher.Flux;
+        import reactor.core.publisher.Mono;
+        import reactor.core.scheduler.Scheduler;
+        import reactor.core.scheduler.Schedulers;
+        import reactor.tools.agent.ReactorDebugAgent;
 
-import java.time.Duration;
-import java.util.HashMap;
-import java.util.UUID;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Stream;
+        import java.time.Duration;
+        import java.util.HashMap;
+        import java.util.Optional;
+        import java.util.UUID;
+        import java.util.concurrent.CompletableFuture;
+        import java.util.concurrent.CountDownLatch;
+        import java.util.concurrent.atomic.AtomicInteger;
+        import java.util.function.Consumer;
+        import java.util.stream.Stream;
 
 /**
  * @description:
@@ -22,6 +26,9 @@ import java.util.stream.Stream;
 public class FluxTest {
 
     public static void main(String[] args) throws InterruptedException {
+        ReactorDebugAgent.init();
+        ReactorDebugAgent.processExistingClasses();
+
         /*Flux.create(fluxSink ->
                 fluxSink.next(1).next(2).next(3).complete())
                 .subscribe(System.out::println);*/
@@ -98,7 +105,7 @@ public class FluxTest {
             System.out.println("state consumer : " + state);
         }).subscribe(System.out::println);*/
 
-        Scheduler publishScheduler = Schedulers.newElastic("parallel-publish");
+        /*Scheduler publishScheduler = Schedulers.newElastic("parallel-publish");
         Scheduler subscribeScheduler = Schedulers.newElastic("parallel-subscribe");
 
         Flux<Integer> flux = Flux.range(1, 3)
@@ -120,10 +127,44 @@ public class FluxTest {
         });
 
         thread.start();
-        thread.join();
-
+        thread.join();*/
 
         /*new CountDownLatch(1).await();*/
+
+        /*Mono.fromCallable(() -> {
+            System.out.println(Thread.currentThread().getName());
+            return "sss";
+        }).subscribe(System.out::println);*/
+
+        /*Mono.fromFuture(CompletableFuture.supplyAsync(() -> {
+            System.out.println(Thread.currentThread().getName());
+            return "";
+        })).subscribe(System.out::println);*/
+
+        /*Mono.fromCallable(() -> {
+            System.out.println(1);
+            return 2;
+        }).subscribe(i -> {
+            System.out.println(i);
+        });*/
+
+        /*Flux.range(1, 10).flatMap(Mono::just).subscribe(System.out::println);*/
+
+        /*Flux.mergeOrdered(Flux.interval(Duration.ofSeconds(1)), Flux.interval(Duration.ofSeconds(2))).subscribe(System.out::println);*/
+
+        /*Flux.defer(() -> {
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return Flux.range(1, 10);
+        });*/
+
+        Flux.range(1, 10).doOnNext(System.out::println).last().subscribe(System.out::println);
+
+        System.out.println(Thread.currentThread().getName());
+
     }
 
 }

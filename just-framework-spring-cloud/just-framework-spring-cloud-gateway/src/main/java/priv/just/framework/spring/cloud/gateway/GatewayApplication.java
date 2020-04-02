@@ -2,6 +2,7 @@ package priv.just.framework.spring.cloud.gateway;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import reactor.tools.agent.ReactorDebugAgent;
 
 /**
  * @description:
@@ -12,6 +13,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class GatewayApplication {
 
     public static void main(String[] args) {
+        // Reactor debug
+        ReactorDebugAgent.init();
+        ReactorDebugAgent.processExistingClasses();
         SpringApplication.run(GatewayApplication.class, args);
     }
 
