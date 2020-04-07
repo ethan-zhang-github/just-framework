@@ -11,8 +11,21 @@ spring:
         - AddRequestHeader=color, blue
         - StripPrefix=1
         - MyCustom=xxx, yyy
+        - name: RequestRateLimiter
+          args:
+            key-resolver: "#{@myCustomKeyResolver}"
+            redis-rate-limiter.replenishRate: 10
+            redis-rate-limiter.burstCapacity: 20
+            redis-rate-limiter.requestedTokens: 1
   application:
     name: gateway
+  redis:
+    client-name: ${spring.application.name}
+    host: 172.16.246.27
+    port: 6379
+    password: redis@wanshifu2017.com
+    database: 3
 
 server:
   port: 1984
+

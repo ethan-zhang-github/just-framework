@@ -161,9 +161,10 @@ public class FluxTest {
             return Flux.range(1, 10);
         });*/
 
-        Flux.range(1, 10).doOnNext(System.out::println).last().subscribe(System.out::println);
+        /*Flux.range(1, 10).doOnNext(System.out::println).last().subscribe(System.out::println);
 
-        System.out.println(Thread.currentThread().getName());
+        System.out.println(Thread.currentThread().getName());*/
+
 
     }
 
