@@ -14,8 +14,11 @@ spring:
         - name: RequestRateLimiter
           args:
             key-resolver: "#{@myCustomKeyResolver}"
-            redis-rate-limiter.replenishRate: 10
-            redis-rate-limiter.burstCapacity: 20
+            # 向令牌桶中加入令牌的速率（每秒加入的令牌数），不会超过令牌桶总容量
+            redis-rate-limiter.replenishRate: 1
+            # 令牌桶总容量
+            redis-rate-limiter.burstCapacity: 50
+            # 每个请求消耗的令牌数
             redis-rate-limiter.requestedTokens: 1
   application:
     name: gateway
@@ -28,4 +31,3 @@ spring:
 
 server:
   port: 1984
-
