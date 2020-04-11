@@ -6,4 +6,7 @@ package priv.just.framework.demo.service;
  * @date: 2020-03-19 19:38
  */
 public interface DemoService {
+
+    void test();
+
 }

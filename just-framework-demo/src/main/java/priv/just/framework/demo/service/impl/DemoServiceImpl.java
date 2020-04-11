@@ -10,4 +10,10 @@ import priv.just.framework.demo.service.DemoService;
  */
 @Service
 public class DemoServiceImpl implements DemoService {
+
+    @Override
+    public void test() {
+        System.out.println("test");
+    }
+
 }

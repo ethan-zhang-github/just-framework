@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import priv.just.framework.demo.bean.SingletonBean;
 import priv.just.framework.demo.service.DemoService;
 
 import javax.annotation.Resource;
@@ -30,6 +31,9 @@ public class DemoController {
     @Resource
     private ApplicationContext applicationContext;
 
+    @Resource
+    private SingletonBean singletonBean;
+
     @PostMapping("test")
     public void test() {
         AutowireCapableBeanFactory autowireCapableBeanFactory = applicationContext.getAutowireCapableBeanFactory();
@@ -45,6 +49,11 @@ public class DemoController {
             String[] beanNamesForType = listableBeanFactory.getBeanNamesForType(DemoService.class);
             System.out.println(Arrays.toString(beanNamesForType));
         }
+    }
+
+    @GetMapping("test3")
+    public void test3() {
+        singletonBean.test();
     }
 
 }
