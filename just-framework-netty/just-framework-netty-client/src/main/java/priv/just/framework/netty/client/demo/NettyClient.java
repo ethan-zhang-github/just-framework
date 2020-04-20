@@ -1,4 +1,4 @@
-package priv.just.framework.netty.client;
+package priv.just.framework.netty.client.demo;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;

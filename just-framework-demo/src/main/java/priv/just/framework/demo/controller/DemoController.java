@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import priv.just.framework.demo.bean.SingletonBean;
 import priv.just.framework.demo.service.DemoService;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.util.Arrays;
 
@@ -33,6 +34,15 @@ public class DemoController {
 
     @Resource
     private SingletonBean singletonBean;
+
+    @Resource
+    private DemoService demoService;
+
+    @PostConstruct
+    public void init() {
+        System.out.println(demoService.getClass());
+        System.out.println(demoService.getClass().getDeclaringClass());
+    }
 
     @PostMapping("test")
     public void test() {
