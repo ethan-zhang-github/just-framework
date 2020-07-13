@@ -1,33 +1,39 @@
 package priv.just.framework.webflux.test;
 
-        import org.reactivestreams.Subscription;
-        import reactor.core.publisher.BaseSubscriber;
-        import reactor.core.publisher.Flux;
-        import reactor.core.publisher.Mono;
-        import reactor.core.scheduler.Scheduler;
-        import reactor.core.scheduler.Schedulers;
-        import reactor.tools.agent.ReactorDebugAgent;
+import lombok.extern.slf4j.Slf4j;
+import reactor.core.publisher.Flux;
+import reactor.core.scheduler.Schedulers;
+import reactor.tools.agent.ReactorDebugAgent;
 
-        import java.time.Duration;
-        import java.util.HashMap;
-        import java.util.Optional;
-        import java.util.UUID;
-        import java.util.concurrent.CompletableFuture;
-        import java.util.concurrent.CountDownLatch;
-        import java.util.concurrent.atomic.AtomicInteger;
-        import java.util.function.Consumer;
-        import java.util.stream.Stream;
+import java.time.Duration;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @description:
  * @author: yixiezi1994@gmail.com
  * @date: 2020-03-27 17:23
  */
+@Slf4j
 public class FluxTest {
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) {
         ReactorDebugAgent.init();
         ReactorDebugAgent.processExistingClasses();
+
+        /*Flux.range(1, 100)
+                .map(i -> i * 2)
+                .filter(i -> i % 2 == 0)
+                .take(10)
+                .publishOn(Schedulers.elastic())
+                .subscribe(System.out::println);*/
+
+        /*Flux.interval(Duration.ofSeconds(1)).buffer(10)*/
 
         /*Flux.create(fluxSink ->
                 fluxSink.next(1).next(2).next(3).complete())
@@ -165,7 +171,84 @@ public class FluxTest {
 
         System.out.println(Thread.currentThread().getName());*/
 
+        /*Flux.range(1, 100)
+                .bufferUntil(i -> (i & 1) == 1)
+                .map(l -> l.stream().map(String::valueOf).collect(Collectors.joining(", ")))
+                .subscribe(log::info);*/
 
+        /*Flux.<String>create(sink -> {
+            sink.next(Thread.currentThread().getName());
+            sink.complete();
+        })
+                .publishOn(Schedulers.single())
+                .map(i -> String.format("[%s] %s", Thread.currentThread().getName(), i))
+                .publishOn(Schedulers.elastic())
+                .map(i -> String.format("[%s] %s", Thread.currentThread().getName(), i))
+                .subscribeOn(Schedulers.parallel())
+                .subscribe(log::info);
+
+        new CountDownLatch(1).await();*/
+
+        // System.out.println(System.currentTimeMillis());
+        /*Instant start = Instant.now();
+
+        CompletableFuture<Integer> future = CompletableFuture.supplyAsync(() -> {
+            sleep(5000);
+            System.out.println(0);
+            return 0;
+        })
+                .thenCombineAsync(CompletableFuture.supplyAsync(() -> {
+                    sleep(2000);
+                    System.out.println(1);
+                    return 1;
+                }), Integer::sum)
+                .thenCombineAsync(CompletableFuture.supplyAsync(() -> {
+                    sleep(1000);
+                    System.out.println(2);
+                    return 1;
+                }), Integer::sum)
+                .thenCombineAsync(CompletableFuture.supplyAsync(() -> {
+                    sleep(6000);
+                    System.out.println(3);
+                    return 1;
+                }), Integer::sum);
+
+        try {
+            System.out.println(future.get());
+            Instant end = Instant.now();
+            System.out.println(Duration.between(start, end).toMillis());
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            System.out.println(e.getCause().getClass());
+        }
+        sleep(5000);*/
+        /*long l = 1234597765123L;
+        System.out.println(l / 1000);
+        System.out.println(TimeUnit.MILLISECONDS.toSeconds(l));*/
+
+        /*CompletableFuture<Object> future = CompletableFuture.supplyAsync(() -> {
+            sleep(1000);
+            throw new IllegalStateException("xxx");
+        }).exceptionally(e -> {
+            System.out.println(e.getCause().getMessage());
+            return null;
+        });
+
+        try {
+            System.out.println(future.get());
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }*/
+        System.out.println(System.currentTimeMillis());
+    }
+
+    private static void sleep(long millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 }
