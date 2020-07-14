@@ -29,4 +29,6 @@ public class RedisProperties {
 
     private int database = 0;
 
+    private int connectionPoolSize = 100;
+
 }

@@ -1,0 +1,5 @@
+just:
+  redis:
+    host: default-test-redis.wanshifu.com
+    password: tRedisW135
+    database: 6
