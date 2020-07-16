@@ -51,6 +51,10 @@ public class RedisController {
 
         RTopic topic = redissonClient.getTopic("just-framework-demo:topic");
         topic.publish(new CacheData(random.nextLong(), "just"));
+
+        RRateLimiter rateLimiter = redissonClient.getRateLimiter("just-framework-demo:rate-limiter");
+        rateLimiter.trySetRate(RateType.OVERALL, 10, 1, RateIntervalUnit.SECONDS);
+        rateLimiter.acquire();
     }
 
     @NoArgsConstructor
