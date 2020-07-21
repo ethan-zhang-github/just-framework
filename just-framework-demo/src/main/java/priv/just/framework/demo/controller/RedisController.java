@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.redisson.api.*;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -13,6 +14,7 @@ import javax.annotation.Resource;
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("redis")
@@ -23,6 +25,8 @@ public class RedisController {
     @Resource
     private RedissonClient redissonClient;
 
+    private RSemaphore semaphore;
+
     @PostConstruct
     public void init() {
         RTopic topic = redissonClient.getTopic("just-framework-demo:topic");
@@ -30,6 +34,21 @@ public class RedisController {
             System.out.println("topic:" + charSequence);
             System.out.println(JSON.toJSONString(cacheData));
         });
+
+        semaphore = redissonClient.getSemaphore("just-framework-demo:semaphore");
+        semaphore.trySetPermits(5);
+    }
+
+    @PostMapping("acquire")
+    public void acquire() throws InterruptedException {
+        if (semaphore.tryAcquire(10, TimeUnit.SECONDS)) {
+            System.out.println("semaphore acquire successfully");
+        }
+    }
+
+    @PostMapping("release")
+    public void release() {
+        semaphore.release();
     }
 
     @RequestMapping("test")
