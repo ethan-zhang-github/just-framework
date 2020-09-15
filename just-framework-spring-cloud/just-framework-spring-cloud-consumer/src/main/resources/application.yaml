@@ -1,0 +1,11 @@
+server:
+  port: 8070
+spring:
+  application:
+    name: consumer
+feign:
+  okhttp:
+    enabled: true
+userClient:
+  ribbon:
+    listOfServers: localhost:8090
