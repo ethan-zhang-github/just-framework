@@ -2,6 +2,7 @@ package priv.just.framework.spring.cloud.consumer.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.circuitbreaker.resilience4j.Resilience4JCircuitBreakerFactory;
+import org.springframework.cloud.client.circuitbreaker.CircuitBreakerFactory;
 import org.springframework.web.bind.annotation.*;
 import priv.just.framework.spring.cloud.provider.api.domain.UserInfo;
 import priv.just.framework.spring.cloud.provider.api.feign.UserClient;
@@ -16,11 +17,11 @@ public class UserController {
     @Resource
     private UserClient userClient;
     @Resource
-    private Resilience4JCircuitBreakerFactory resilience4jCircuitBreakerFactory;
+    private CircuitBreakerFactory<?, ?> circuitBreakerFactory;
 
     @GetMapping("getUserInfo")
     public UserInfo getUserInfo(@RequestParam("id") long id) {
-        return resilience4jCircuitBreakerFactory.create("getUserInfo").run(() -> userClient.getUserInfo(id), throwable -> {
+        return circuitBreakerFactory.create("getUserInfo").run(() -> userClient.getUserInfo(id), throwable -> {
             log.error("getUserInfo timeout!", throwable);
             return new UserInfo();
         });

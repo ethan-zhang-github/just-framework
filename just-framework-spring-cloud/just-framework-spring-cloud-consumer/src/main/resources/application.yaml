@@ -9,8 +9,8 @@ feign:
   client:
     config:
       userClient:
-        connectTimeout: 60
-        readTimeout: 60
+        connectTimeout: 60000
+        readTimeout: 60000
 userClient:
   ribbon:
     listOfServers: localhost:8090
