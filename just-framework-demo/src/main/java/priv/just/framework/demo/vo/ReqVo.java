@@ -7,4 +7,6 @@ public class ReqVo {
 
     private String name;
 
+    private int version;
+
 }

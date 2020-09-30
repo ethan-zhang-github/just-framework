@@ -3,6 +3,20 @@ server:
 spring:
   application:
     name: consumer
+  cloud:
+    stream:
+      rocketmq:
+        binder:
+          name-server: test-rocketmq.wanshifu.com:9876
+      default-binder: rocketmq
+      bindings:
+#        input:
+#          destination: test_pre-release_topic_common_order_general
+#          group: test-group
+#          consumer:
+#            tags: test-tag
+        output:
+          destination: test_pre-release_topic_common_order_general
 feign:
   okhttp:
     enabled: true
