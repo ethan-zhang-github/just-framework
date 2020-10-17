@@ -28,3 +28,7 @@ feign:
 userClient:
   ribbon:
     listOfServers: localhost:8090
+rocketmq:
+  name-server: test-rocketmq.wanshifu.com:9876
+  producer:
+    group: provider-producer-group

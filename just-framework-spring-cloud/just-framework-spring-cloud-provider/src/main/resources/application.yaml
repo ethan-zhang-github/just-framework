@@ -3,17 +3,21 @@ server:
 spring:
   application:
     name: provider
-  cloud:
-    stream:
-      rocketmq:
-        binder:
-          name-server: test-rocketmq.wanshifu.com:9876
-      default-binder: rocketmq
-      bindings:
-        input:
-          destination: test_pre-release_topic_common_order_general
-          group: provider
-          consumer:
-            tags: add-user-tag
-        output:
-          destination: test_pre-release_topic_common_order_general
+#  cloud:
+#    stream:
+#      rocketmq:
+#        binder:
+#          name-server: test-rocketmq.wanshifu.com:9876
+#      default-binder: rocketmq
+#      bindings:
+#        input:
+#          destination: test_pre-release_topic_common_order_general
+#          group: provider
+#          consumer:
+#            tags: add-user-tag
+#        output:
+#          destination: test_pre-release_topic_common_order_general
+rocketmq:
+  name-server: test-rocketmq.wanshifu.com:9876
+  producer:
+    group: provider-producer-group

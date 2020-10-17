@@ -6,7 +6,7 @@ import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.messaging.Processor;
 import priv.just.framework.spring.cloud.provider.api.channel.TestChannel;
 
-@EnableBinding(Processor.class)
+// @EnableBinding(Processor.class)
 @SpringBootApplication
 public class ProviderApplication {
 
