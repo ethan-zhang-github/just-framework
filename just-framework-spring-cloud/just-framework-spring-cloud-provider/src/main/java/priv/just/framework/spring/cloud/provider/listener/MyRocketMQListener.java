@@ -12,7 +12,7 @@ import javax.annotation.Resource;
 @RocketMQMessageListener(
         topic = "test_pre-release_topic_common_order_general",
         consumerGroup = "provider-consumer-group",
-        selectorExpression = "addUserInfo"
+        selectorExpression = "addUserInfo || transaction1"
 )
 public class MyRocketMQListener implements RocketMQListener<UserInfo> {
 

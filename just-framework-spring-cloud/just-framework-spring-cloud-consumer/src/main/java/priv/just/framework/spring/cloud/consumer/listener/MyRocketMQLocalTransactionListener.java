@@ -22,7 +22,7 @@ public class MyRocketMQLocalTransactionListener implements RocketMQLocalTransact
             if (transacationArg.getStatus() % 2 == 1) {
                 return COMMIT;
             }
-            return ROLLBACK;
+            return UNKNOWN;
         }
         return UNKNOWN;
     }

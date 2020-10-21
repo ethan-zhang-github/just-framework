@@ -28,8 +28,8 @@ public class UserController {
     private Source source;
     @Resource
     private RocketMQTemplate rocketMQTemplate;
-    @Resource
-    private Random random;
+
+    private final Random random = new Random();
 
     @GetMapping("getUserInfo")
     public UserInfo getUserInfo(@RequestParam("id") long id) {
