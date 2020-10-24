@@ -2,13 +2,10 @@ package priv.just.framework.batch;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration;
 
-/**
- * @description:
- * @author: yixiezi1994@gmail.com
- * @date: 2020-03-12 14:21
- */
-@SpringBootApplication
+@SpringBootApplication(exclude = {DataSourceAutoConfiguration.class, DataSourceTransactionManagerAutoConfiguration.class})
 public class BatchApplication {
 
     public static void main(String[] args) {
