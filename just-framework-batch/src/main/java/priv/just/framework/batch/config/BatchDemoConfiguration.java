@@ -14,9 +14,11 @@ import org.springframework.batch.item.data.AbstractPaginatedDataItemReader;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.FileSystemResource;
 import priv.just.framework.batch.domain.DemoInput;
 import priv.just.framework.batch.domain.DemoOutput;
+import priv.just.framework.batch.reader.EasyExcelItemReader;
 import priv.just.framework.batch.writer.EasyExcelItemWriter;
 
 import javax.annotation.Resource;
@@ -46,19 +48,25 @@ public class BatchDemoConfiguration {
     }
 
     @Bean
-    public Step demoFirstStep(ItemReader<DemoInput> demoInputItemReader,
+    public Step demoFirstStep(ItemReader<DemoInput> easyExcelItemReader,
                               ItemProcessor<DemoInput, DemoOutput> demoInputOutputItemProcessor,
                               ItemWriter<DemoOutput> easyExcelItemWriter) {
         return stepBuilderFactory
                 .get("demoFirstStep")
                 .<DemoInput, DemoOutput>chunk(20)
-                .reader(demoInputItemReader)
+                .reader(easyExcelItemReader)
                 .processor(demoInputOutputItemProcessor)
                 .writer(easyExcelItemWriter)
-                /*.faultTolerant()
-                .skip(Exception.class)
-                .skipLimit(10)*/
                 .build();
+    }
+
+    @StepScope
+    @Bean
+    public ItemReader<DemoInput> easyExcelItemReader(@Value("#{jobParameters['readPath']}") String readPath) {
+        EasyExcelItemReader<DemoInput> easyExcelItemReader = new EasyExcelItemReader<>();
+        easyExcelItemReader.setResource(new FileSystemResource(readPath));
+        easyExcelItemReader.setTargetClz(DemoInput.class);
+        return easyExcelItemReader;
     }
 
     @StepScope
@@ -66,6 +74,7 @@ public class BatchDemoConfiguration {
     public ItemReader<DemoInput> demoInputItemReader() {
         DemoInputItemReader demoInputItemReader = new DemoInputItemReader();
         demoInputItemReader.setName("demoInputItemReader");
+        demoInputItemReader.setPageSize(100);
         return demoInputItemReader;
     }
 
@@ -77,10 +86,14 @@ public class BatchDemoConfiguration {
 
     @StepScope
     @Bean
-    public ItemWriter<DemoOutput> easyExcelItemWriter(@Value("#{jobParameters['path']}") String path) {
+    public ItemWriter<DemoOutput> easyExcelItemWriter(@Value("#{jobParameters['writePath']}") String writePath,
+                                                      @Value("#{jobParameters['template']}") String template) {
         EasyExcelItemWriter<DemoOutput> easyExcelItemWriter = new EasyExcelItemWriter<>();
-        easyExcelItemWriter.setResource(new FileSystemResource(path));
+        easyExcelItemWriter.setResource(new FileSystemResource(writePath));
         easyExcelItemWriter.setTargetClz(DemoOutput.class);
+        //easyExcelItemWriter.setWriteMode(EasyExcelItemWriter.WriteMode.TEMPLATE);
+        //easyExcelItemWriter.setTemplate(new ClassPathResource(template));
+        easyExcelItemWriter.setMaxSheetLines(500);
         return easyExcelItemWriter;
     }
 
