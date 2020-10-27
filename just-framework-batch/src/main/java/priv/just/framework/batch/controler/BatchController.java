@@ -31,11 +31,14 @@ public class BatchController {
     @Resource
     private Job demoJob;
     @Resource
+    private Job parallelJob;
+    @Resource
     private JobLauncher jobLauncher;
 
     @RequestMapping("test")
     public void test() throws JobParametersInvalidException, JobExecutionAlreadyRunningException, JobRestartException, JobInstanceAlreadyCompleteException {
-        jobLauncher.run(demoJob, new JobParametersBuilder()
+        jobLauncher.run(parallelJob, new JobParametersBuilder()
+                .addLong("timestamp", System.currentTimeMillis())
                 .addString("readPath", "E:\\demo\\read.xlsx")
                 .addString("writePath", "E:\\demo\\write.xlsx")
                 .toJobParameters());
