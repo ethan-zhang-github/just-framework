@@ -12,6 +12,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 
+import javax.annotation.concurrent.ThreadSafe;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,14 +26,16 @@ import java.util.concurrent.atomic.AtomicReference;
  * 常规 {@link WriteMode#NORMAL}
  * 模块 {@link WriteMode#TEMPLATE}
  * 填充 {@link WriteMode#FILL}
- * 支持数据分片写入多个工作表 {@link #sheets}
+ * 常规模式下支持数据分片写入多个工作表 {@link #sheets}
  * 每个工作表最多写入行数 {@link #maxSheetLines}
  * 一个工作表写满后 {@link #ensureSheetSize()} 自动扩容
- * @param <T> 目标读取类型
+ * @param <T> 目标写入类型
+ * @author Ethan Zhang
  */
 @Slf4j
 @Getter
 @Setter
+@ThreadSafe
 public class EasyExcelItemWriter<T> implements ItemWriter<T>, InitializingBean, DisposableBean {
 
     private Resource resource;
@@ -40,7 +43,7 @@ public class EasyExcelItemWriter<T> implements ItemWriter<T>, InitializingBean, 
     private List<WriteSheet> sheets;
     private AtomicInteger curSheetIndex = new AtomicInteger(-1);
     private AtomicInteger linesWritten = new AtomicInteger(0);
-    private String sheetNamePrefix = "sheet";
+    private String sheetNamePrefix = "sheet-";
     private int maxSheetLines = Integer.MAX_VALUE;
     private Class<? extends T> targetClz;
     private Resource template;
@@ -99,7 +102,7 @@ public class EasyExcelItemWriter<T> implements ItemWriter<T>, InitializingBean, 
             synchronized (this) {
                 if (linesWritten.get() >= sheets.size() * maxSheetLines) {
                     curSheetIndex.incrementAndGet();
-                    WriteSheet writeSheet = EasyExcel.writerSheet(curSheetIndex.get(), sheetNamePrefix + "-" + curSheetIndex.get()).build();
+                    WriteSheet writeSheet = EasyExcel.writerSheet(curSheetIndex.get(), sheetNamePrefix + curSheetIndex.get()).build();
                     sheets.add(writeSheet);
                     curSheet.set(sheets.get(curSheetIndex.get()));
                 }

@@ -2,7 +2,6 @@ package priv.just.framework.batch.configuration;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
-import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
@@ -22,7 +21,6 @@ import priv.just.framework.batch.writer.EasyExcelItemWriter;
 import javax.annotation.Resource;
 
 @Configuration
-@EnableBatchProcessing
 public class BatchDemoConfiguration {
 
     @Resource

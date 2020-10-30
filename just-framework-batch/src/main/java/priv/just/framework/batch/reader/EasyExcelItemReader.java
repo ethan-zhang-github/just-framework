@@ -15,6 +15,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.core.io.Resource;
 import org.springframework.util.Assert;
 
+import javax.annotation.concurrent.ThreadSafe;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -25,9 +26,18 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
+/**
+ * EasyExcel 扩展 Spring Batch {@link ItemReader}
+ * 支持多线程并发读取
+ * 支持读取 excel 文件中的多个 sheet
+ * 支持根据偏移量 {@link #sheetIndexes} 或名称 {@link #sheetNames} 过滤 sheet
+ * @param <T> 目标读取类型
+ * @author Ethan Zhang
+ */
 @Slf4j
 @Getter
 @Setter
+@ThreadSafe
 public class EasyExcelItemReader<T> implements ItemReader<T>, InitializingBean, DisposableBean {
 
     private Resource resource;
@@ -59,12 +69,10 @@ public class EasyExcelItemReader<T> implements ItemReader<T>, InitializingBean, 
         listener = new EasyExcelItemReaderListener();
         reader = EasyExcel.read(resource.getFile(), targetClz, listener).build();
         List<ReadSheet> readSheets = reader.excelExecutor().sheetList();
-        if (CollectionUtils.isNotEmpty(sheetIndexes)) {
-            readSheets = readSheets.stream().filter(readSheet -> sheetIndexes.contains(readSheet.getSheetNo()))
-                    .collect(Collectors.toList());
-        }
-        if (CollectionUtils.isNotEmpty(sheetNames)) {
-            readSheets = readSheets.stream().filter(readSheet -> sheetNames.contains(readSheet.getSheetName()))
+        if (CollectionUtils.isNotEmpty(sheetIndexes) || CollectionUtils.isNotEmpty(sheetNames)) {
+            readSheets = readSheets.stream()
+                    .filter(readSheet -> sheetIndexes.contains(readSheet.getSheetNo())
+                            || sheetNames.contains(readSheet.getSheetName()))
                     .collect(Collectors.toList());
         }
         Assert.notEmpty(readSheets, "The resource file must have at least 1 sheet!");
