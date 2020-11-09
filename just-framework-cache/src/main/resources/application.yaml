@@ -1,0 +1,16 @@
+spring:
+  cache:
+    redis:
+      time-to-live: P1D
+      key-prefix: auto-cache-
+  redis:
+    host: default-test-redis.wanshifu.com
+    port: 6379
+    password: tRedisW135
+    database: 1
+    jedis:
+      pool:
+        max-idle: 8
+        max-active: 32
+        max-wait: PT5S
+        min-idle: 4

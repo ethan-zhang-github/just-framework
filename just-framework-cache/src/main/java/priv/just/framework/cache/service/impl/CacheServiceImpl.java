@@ -13,7 +13,7 @@ import priv.just.framework.cache.service.CacheService;
 @Service
 public class CacheServiceImpl implements CacheService {
 
-    @Cacheable(cacheNames = "common")
+    @Cacheable(cacheNames = "common", cacheManager = "redisCacheManager")
     @Override
     public CacheValue get(CacheKey cacheKey) {
         sleep(1000);
