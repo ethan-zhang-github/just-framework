@@ -7,6 +7,8 @@ public interface CacheService {
 
     CacheValue get(CacheKey cacheKey);
 
+    CacheValue getOther(CacheKey cacheKey);
+
     CacheValue load(CacheKey cacheKey);
 
     void delete(CacheKey cacheKey);

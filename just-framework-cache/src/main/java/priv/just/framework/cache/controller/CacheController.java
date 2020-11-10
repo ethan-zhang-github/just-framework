@@ -22,6 +22,11 @@ public class CacheController {
         return cacheService.get(cacheKey);
     }
 
+    @PostMapping("getOther")
+    public CacheValue getOther(@RequestBody CacheKey cacheKey) {
+        return cacheService.getOther(cacheKey);
+    }
+
     @PostMapping("load")
     public CacheValue load(@RequestBody CacheKey cacheKey) {
         return cacheService.load(cacheKey);

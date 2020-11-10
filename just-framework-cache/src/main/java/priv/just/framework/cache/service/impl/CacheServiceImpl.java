@@ -20,17 +20,24 @@ public class CacheServiceImpl implements CacheService {
         return new CacheValue();
     }
 
-    @CachePut(cacheNames = "common")
+    @Cacheable(cacheNames = "other", cacheManager = "redisCacheManager")
+    @Override
+    public CacheValue getOther(CacheKey cacheKey) {
+        sleep(1000);
+        return new CacheValue();
+    }
+
+    @CachePut(cacheNames = "common", cacheManager = "redisCacheManager")
     @Override
     public CacheValue load(CacheKey cacheKey) {
         sleep(1000);
         return new CacheValue();
     }
 
-    @CacheEvict(cacheNames = "common")
+    @CacheEvict(cacheNames = "common", cacheManager = "redisCacheManager")
     @Override
     public void delete(CacheKey cacheKey) {
-        sleep(1000);
+        sleep(100);
     }
 
     private void sleep(long millis) {

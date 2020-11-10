@@ -8,17 +8,25 @@ import org.springframework.boot.autoconfigure.cache.CacheProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
+import org.springframework.cache.interceptor.KeyGenerator;
+import org.springframework.cache.interceptor.SimpleKeyGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
+import org.springframework.util.ReflectionUtils;
 
+import java.lang.reflect.Method;
 import java.time.Duration;
+import java.util.Objects;
 
 @EnableCaching
 @Configuration
@@ -30,6 +38,35 @@ public class CustomCacheConfiguration extends CachingConfigurerSupport {
     @Override
     public CacheManager cacheManager() {
         return defaultCacheManager;
+    }
+
+    @Override
+    public KeyGenerator keyGenerator() {
+        return (target, method, params) -> {
+            Object key = SimpleKeyGenerator.generateKey(params);
+            Class<?> targetClazz = target.getClass();
+            Method targetMethod = ReflectionUtils.findMethod(targetClazz, method.getName(), method.getParameterTypes());
+            if (Objects.isNull(targetMethod)) {
+                return key;
+            }
+            Cacheable cacheable = AnnotationUtils.findAnnotation(targetMethod, Cacheable.class);
+            if (Objects.nonNull(cacheable)) {
+                return String.join("-", cacheable.cacheNames()) + ":" + key;
+            }
+            CachePut cachePut = AnnotationUtils.findAnnotation(targetMethod, CachePut.class);
+            if (Objects.nonNull(cachePut)) {
+                return String.join("-", cachePut.cacheNames()) + ":" + key;
+            }
+            cacheable = AnnotationUtils.findAnnotation(targetClazz, Cacheable.class);
+            if (Objects.nonNull(cacheable)) {
+                return String.join("-", cacheable.cacheNames()) + ":" + key;
+            }
+            cachePut = AnnotationUtils.findAnnotation(targetClazz, CachePut.class);
+            if (Objects.nonNull(cachePut)) {
+                return String.join("-", cachePut.cacheNames()) + ":" + key;
+            }
+            return key;
+        };
     }
 
     @Configuration
