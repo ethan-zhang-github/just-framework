@@ -42,31 +42,33 @@ public class CustomCacheConfiguration extends CachingConfigurerSupport {
 
     @Override
     public KeyGenerator keyGenerator() {
-        return (target, method, params) -> {
-            Object key = SimpleKeyGenerator.generateKey(params);
-            Class<?> targetClazz = target.getClass();
-            Method targetMethod = ReflectionUtils.findMethod(targetClazz, method.getName(), method.getParameterTypes());
-            if (Objects.isNull(targetMethod)) {
-                return key;
-            }
-            Cacheable cacheable = AnnotationUtils.findAnnotation(targetMethod, Cacheable.class);
-            if (Objects.nonNull(cacheable)) {
-                return String.join("-", cacheable.cacheNames()) + ":" + key;
-            }
-            CachePut cachePut = AnnotationUtils.findAnnotation(targetMethod, CachePut.class);
-            if (Objects.nonNull(cachePut)) {
-                return String.join("-", cachePut.cacheNames()) + ":" + key;
-            }
-            cacheable = AnnotationUtils.findAnnotation(targetClazz, Cacheable.class);
-            if (Objects.nonNull(cacheable)) {
-                return String.join("-", cacheable.cacheNames()) + ":" + key;
-            }
-            cachePut = AnnotationUtils.findAnnotation(targetClazz, CachePut.class);
-            if (Objects.nonNull(cachePut)) {
-                return String.join("-", cachePut.cacheNames()) + ":" + key;
-            }
-            return key;
-        };
+        return (target, method, params) -> getKeyPrefix(target, method) + SimpleKeyGenerator.generateKey(params);
+    }
+
+    private String getKeyPrefix(Object target, Method method) {
+        Class<?> targetClazz = target.getClass();
+        Method targetMethod = ReflectionUtils.findMethod(targetClazz, method.getName(), method.getParameterTypes());
+        String prefix = "just-framework-cache:";
+        if (Objects.isNull(targetMethod)) {
+            return prefix;
+        }
+        Cacheable cacheable = AnnotationUtils.findAnnotation(targetMethod, Cacheable.class);
+        if (Objects.nonNull(cacheable)) {
+            return prefix + String.join("-", cacheable.cacheNames()) + ":";
+        }
+        CachePut cachePut = AnnotationUtils.findAnnotation(targetMethod, CachePut.class);
+        if (Objects.nonNull(cachePut)) {
+            return prefix + String.join("-", cachePut.cacheNames()) + ":";
+        }
+        cacheable = AnnotationUtils.findAnnotation(targetClazz, Cacheable.class);
+        if (Objects.nonNull(cacheable)) {
+            return prefix + String.join("-", cacheable.cacheNames()) + ":";
+        }
+        cachePut = AnnotationUtils.findAnnotation(targetClazz, CachePut.class);
+        if (Objects.nonNull(cachePut)) {
+            return prefix + String.join("-", cachePut.cacheNames()) + ":";
+        }
+        return prefix;
     }
 
     @Configuration
