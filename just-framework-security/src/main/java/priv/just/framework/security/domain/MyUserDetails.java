@@ -2,39 +2,38 @@ package priv.just.framework.security.domain;
 
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
+import priv.just.framework.security.enums.UserRole;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- * @description:
- * @author: yixiezi1994@gmail.com
- * @date: 2020-01-16 11:40
+ * 自定义用户信息
+ * @author Ethan Zhang
  */
 @Data
-public class UserInfo implements UserDetails {
+public class MyUserDetails implements UserDetails {
 
     private long id;
+
+    private boolean enable;
 
     private String username;
 
     private String password;
 
-    private String roles;
+    private UserRole userRole;
 
-    private boolean enable;
+    private List<MyUserAuthority> authorities;
 
-    private List<GrantedAuthority> authorities;
-
-    public UserInfo(String username, String password, String roles) {
-        this.username = username;
-        this.password = password;
-        this.roles = roles;
+    public MyUserDetails(String username, String password, UserRole userRole) {
         this.id = System.currentTimeMillis();
         this.enable = true;
-        authorities = AuthorityUtils.commaSeparatedStringToAuthorityList(roles);
+        this.username = username;
+        this.password = password;
+        authorities = userRole.getUserAuthorities().stream().map(MyUserAuthority::new).collect(Collectors.toList());
     }
 
     @Override

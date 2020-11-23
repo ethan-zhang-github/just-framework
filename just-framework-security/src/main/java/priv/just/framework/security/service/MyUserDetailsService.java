@@ -1,28 +1,26 @@
 package priv.just.framework.security.service;
 
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import priv.just.framework.security.domain.UserInfo;
-import priv.just.framework.security.repository.UserInfoRepository;
+import priv.just.framework.security.domain.MyUserDetails;
+import priv.just.framework.security.repository.MyUserDetailsRepository;
 
 import javax.annotation.Resource;
 
 /**
- * @description:
- * @author: yixiezi1994@gmail.com
- * @date: 2020-01-16 13:54
+ * 自定义用户信息服务
+ * @author Ethan Zhang
  */
 @Service
 public class MyUserDetailsService implements UserDetailsService {
 
     @Resource
-    private UserInfoRepository userInfoRepository;
+    private MyUserDetailsRepository myUserDetailsRepository;
 
     @Override
-    public UserInfo loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userInfoRepository.getByUsername(username);
+    public MyUserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return myUserDetailsRepository.getByUsername(username);
     }
 
 }
