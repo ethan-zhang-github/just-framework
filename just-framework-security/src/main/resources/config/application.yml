@@ -1,6 +1,2 @@
-#spring:
-#  security:
-#    domain:
-#      name: admin
-#      password: 123456
-#      roles: USER
+server:
+  port: 8070

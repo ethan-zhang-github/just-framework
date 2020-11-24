@@ -10,6 +10,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.annotation.Resource;
+import java.time.Duration;
 
 /**
  * spring security 核心配置
@@ -18,6 +19,9 @@ import javax.annotation.Resource;
 @EnableWebSecurity
 public class MyWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
 
+    public static final String COOKIE_NAME = "just-token";
+    public static final String COOKIE_DOMAIN = "localhost";
+    public static final String PERMIT_ALL_URL = "/test/**";
     public static final String LOGIN_URL = "/user/security/login";
     public static final String LOGOUT_URL = "/user/security/logout";
 
@@ -37,6 +41,16 @@ public class MyWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .successHandler(new MyAuthenticationSuccessHandler())
                 // 登录失败处理
                 .failureHandler(new MyAuthenticationFailureHandler()).and()
+                // 记住用户身份
+                .rememberMe()
+                // 总是记住
+                .alwaysRemember(true)
+                // token 有效时长
+                .tokenValiditySeconds((int) Duration.ofDays(1).getSeconds())
+                // cookie 域名
+                .rememberMeCookieDomain(COOKIE_DOMAIN)
+                // cookie 名称
+                .rememberMeCookieName(COOKIE_NAME).and()
                 // 用户退出
                 .logout()
                 // 用户退出地址
@@ -46,7 +60,7 @@ public class MyWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 // 授权请求
                 .authorizeRequests()
                 // 无授权地址
-                .antMatchers("/test/**").permitAll()
+                .antMatchers(PERMIT_ALL_URL).permitAll()
                 // 其余所有请求都需要授权访问
                 .anyRequest().authenticated().and()
                 // 异常处理
@@ -57,12 +71,12 @@ public class MyWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .accessDeniedHandler(new MyAccessDeniedHandler()).and()
                 // 会话管理
                 .sessionManagement()
-                // 无状态模式
+                // session 无状态模式
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 // 跨域处理
                 .cors().and()
                 // CSRF（跨站请求伪造）支持
-                .csrf();
+                .csrf().disable();
     }
 
     @Override

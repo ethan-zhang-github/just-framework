@@ -11,7 +11,7 @@ import java.io.IOException;
 public class ResponseUtil {
 
     public static void writeAsJson(HttpServletResponse response, Object data) {
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
         try {
             response.getWriter().write(JSON.toJSONString(data));
         } catch (IOException e) {
