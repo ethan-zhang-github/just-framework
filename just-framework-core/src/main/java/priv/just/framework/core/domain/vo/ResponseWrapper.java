@@ -25,6 +25,10 @@ public class ResponseWrapper<T> {
         return new ResponseWrapper<>(true, "seccess", "成功", data);
     }
 
+    public static ResponseWrapper<Object> success() {
+        return new ResponseWrapper<>(true, "seccess", "成功", EMPTY_DATA);
+    }
+
     public static ResponseWrapper<Object> failure(String code, String message) {
         return new ResponseWrapper<>(false, code, message, EMPTY_DATA);
     }
@@ -38,7 +42,7 @@ public class ResponseWrapper<T> {
     }
 
     public static ResponseWrapper<Object> unAuthenticated() {
-        return failure("unAuthenticated", "未登录无权访问该资源");
+        return failure("unAuthenticated", "未登录或无权访问该资源");
     }
 
     public static ResponseWrapper<Object> unAuthorised() {
