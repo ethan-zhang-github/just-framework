@@ -1,17 +1,26 @@
 package priv.just.framework.security.configuration;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.RememberMeServices;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.session.data.redis.RedisIndexedSessionRepository;
+import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
+import org.springframework.session.security.SpringSessionBackedSessionRegistry;
+import org.springframework.session.security.web.authentication.SpringSessionRememberMeServices;
 
 import javax.annotation.Resource;
-import java.time.Duration;
 
 /**
  * spring security 核心配置
@@ -19,10 +28,9 @@ import java.time.Duration;
  */
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableRedisHttpSession(redisNamespace = "just:session:")
 public class MyWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
 
-    public static final String COOKIE_NAME = "just-token";
-    public static final String COOKIE_DOMAIN = "localhost";
     public static final String PERMIT_ALL_URL = "/test/**";
     public static final String LOGIN_URL = "/user/security/login";
     public static final String LOGOUT_URL = "/user/security/logout";
@@ -31,6 +39,8 @@ public class MyWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
 
     @Resource
     private UserDetailsService userDetailsService;
+    @Resource
+    private RedisIndexedSessionRepository redisIndexedSessionRepository;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -40,25 +50,19 @@ public class MyWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 // 登录处理地址
                 .loginProcessingUrl(LOGIN_URL)
                 // 登录成功处理
-                .successHandler(new MyAuthenticationSuccessHandler())
+                .successHandler(myAuthenticationSuccessHandler())
                 // 登录失败处理
-                .failureHandler(new MyAuthenticationFailureHandler()).and()
+                .failureHandler(myAuthenticationFailureHandler()).and()
                 // 记住用户身份
                 .rememberMe()
-                // 总是记住
-                .alwaysRemember(true)
-                // token 有效时长
-                .tokenValiditySeconds((int) Duration.ofDays(1).getSeconds())
-                // cookie 域名
-                .rememberMeCookieDomain(COOKIE_DOMAIN)
-                // cookie 名称
-                .rememberMeCookieName(COOKIE_NAME).and()
+                // 集成 spring session
+                .rememberMeServices(springSessionRememberMeServices()).and()
                 // 用户退出
                 .logout()
                 // 用户退出地址
                 .logoutUrl(LOGOUT_URL)
                 // 用户退出成功处理
-                .logoutSuccessHandler(new MyLogoutSuccessHandler()).and()
+                .logoutSuccessHandler(myLogoutSuccessHandler()).and()
                 // 授权请求
                 .authorizeRequests()
                 // 无授权地址
@@ -68,13 +72,15 @@ public class MyWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 // 异常处理
                 .exceptionHandling()
                 // 未登录用户访问无权限资源处理
-                .authenticationEntryPoint(new MyAuthenticationEntryPoint())
+                .authenticationEntryPoint(myAuthenticationEntryPoint())
                 // 已登录用户访问无权限资源处理
-                .accessDeniedHandler(new MyAccessDeniedHandler()).and()
+                .accessDeniedHandler(myAccessDeniedHandler()).and()
                 // 会话管理
                 .sessionManagement()
-                // session 无状态模式
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                // 最多同时存在 session 数量
+                .maximumSessions(3)
+                // 集成 spring session
+                .sessionRegistry(springSessionBackedSessionRegistry()).and().and()
                 // 跨域处理
                 .cors().and()
                 // CSRF（跨站请求伪造）支持
@@ -84,6 +90,43 @@ public class MyWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(PASSWORD_ENCODER);
+    }
+
+    @Bean
+    public AuthenticationSuccessHandler myAuthenticationSuccessHandler() {
+        return new MyAuthenticationSuccessHandler();
+    }
+
+    @Bean
+    public AuthenticationFailureHandler myAuthenticationFailureHandler() {
+        return new MyAuthenticationFailureHandler();
+    }
+
+    @Bean
+    public LogoutSuccessHandler myLogoutSuccessHandler() {
+        return new MyLogoutSuccessHandler();
+    }
+
+    @Bean
+    public AuthenticationEntryPoint myAuthenticationEntryPoint() {
+        return new MyAuthenticationEntryPoint();
+    }
+
+    @Bean
+    public AccessDeniedHandler myAccessDeniedHandler() {
+        return new MyAccessDeniedHandler();
+    }
+
+    @Bean
+    public RememberMeServices springSessionRememberMeServices() {
+        SpringSessionRememberMeServices rememberMeServices = new SpringSessionRememberMeServices();
+        rememberMeServices.setRememberMeParameterName("remember");
+        return rememberMeServices;
+    }
+
+    @Bean
+    public SpringSessionBackedSessionRegistry<?> springSessionBackedSessionRegistry() {
+        return new SpringSessionBackedSessionRegistry<>(redisIndexedSessionRepository);
     }
 
 }

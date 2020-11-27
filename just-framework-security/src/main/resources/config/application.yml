@@ -1,2 +1,11 @@
 server:
   port: 8070
+spring:
+#  session:
+#    store-type: redis
+#    timeout: 3600
+  redis:
+    host: default-test-redis.wanshifu.com
+    port: 6379
+    password: tRedisW135
+    database: 2
