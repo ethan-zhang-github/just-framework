@@ -2,6 +2,8 @@ package priv.just.framework.security.service;
 
 import priv.just.framework.security.domain.Order;
 
+import java.util.List;
+
 public interface OrderService {
 
     Order queryOrder(long orderId);
@@ -9,5 +11,7 @@ public interface OrderService {
     long createOrder(Order order);
 
     void deleteOrder(long orderId);
+
+    List<Order> getAll();
 
 }

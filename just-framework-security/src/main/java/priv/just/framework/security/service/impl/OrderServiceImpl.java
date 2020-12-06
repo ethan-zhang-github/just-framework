@@ -4,6 +4,9 @@ import org.springframework.stereotype.Service;
 import priv.just.framework.security.domain.Order;
 import priv.just.framework.security.service.OrderService;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -27,6 +30,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public void deleteOrder(long orderId) {
         orders.remove(orderId);
+    }
+
+    @Override
+    public List<Order> getAll() {
+        return Collections.unmodifiableList(new ArrayList<>(orders.values()));
     }
 
 }

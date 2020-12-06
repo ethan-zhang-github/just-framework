@@ -1,6 +1,7 @@
 package priv.just.framework.security.configuration;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,12 +16,18 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.session.data.redis.RedisIndexedSessionRepository;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import org.springframework.session.security.SpringSessionBackedSessionRegistry;
 import org.springframework.session.security.web.authentication.SpringSessionRememberMeServices;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 import javax.annotation.Resource;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.stream.Collectors;
 
 /**
  * spring security 核心配置
@@ -83,7 +90,7 @@ public class MyWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
                 .sessionRegistry(springSessionBackedSessionRegistry()).and().and()
                 // 跨域处理
                 .cors().and()
-                // CSRF（跨站请求伪造）支持
+                // CSRF 跨站请求伪造防御
                 .csrf().disable();
     }
 
@@ -127,6 +134,16 @@ public class MyWebSecurityConfigurer extends WebSecurityConfigurerAdapter {
     @Bean
     public SpringSessionBackedSessionRegistry<?> springSessionBackedSessionRegistry() {
         return new SpringSessionBackedSessionRegistry<>(redisIndexedSessionRepository);
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        return request -> {
+            CorsConfiguration corsConfiguration = new CorsConfiguration();
+            corsConfiguration.setAllowedOrigins(Collections.singletonList("localhost"));
+            corsConfiguration.setAllowedMethods(Arrays.stream(HttpMethod.values()).map(HttpMethod::toString).collect(Collectors.toList()));
+            return corsConfiguration;
+        };
     }
 
 }
